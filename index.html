@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.1/reset.min.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous"> -->
+
+    <title>Document</title>
+
+    <style>
+        button {
+            cursor: pointer;
+        }
+
+        #wrap {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .search-area {
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding: 20px 0;
+        }
+        .search-area input {
+            width: 400px;
+            height: 40px;
+            box-sizing: border-box;
+        }
+        .search-area button {
+            width: 50px;
+            height: 40px;
+            border: 1px solid;
+            box-sizing: border-box;
+            border-radius: 3px;
+            
+        }
+
+        .list {
+            position: relative;
+            margin-top: 70px;
+            padding: 20px;
+        }
+        .list .visual {
+            position: absolute;
+            width: 1350px;
+            height: 900px;
+            left: 50%;
+            transform: translate(-50%, 0);
+        }
+        .list .card {
+            position: absolute;
+            width: 270px;
+            height: 450px;
+            box-sizing: border-box;
+            padding: 20px;
+            transition: box-shadow .5s;
+        }
+        .list .card:hover {
+            box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+            cursor: pointer;
+        }
+        .list div.shaking {
+            animation: shaking .7s ease;
+            animation-iteration-count: infinite;
+        }
+        .list .card img {
+            width: 230px;
+            height: 230px;
+        }
+        .list .card img,
+        .list .card .card-body {
+            pointer-events: none;
+        }
+        .list .card .card-body {
+            position: relative;
+            width: 100%;
+            height: 37%;
+        }
+        .list .card .card-body .pname {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+        .list .card .card-body .price {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: red;
+        }
+        .list .card .card-body .price::after {
+            content: " 원";
+        }
+        @keyframes shaking {
+            25% {transform: rotate(-2deg);}
+            50% {transform: rotate(2deg);}
+            75% {transform: rotate(-2deg);}
+            100% {transform: rotate(2deg);} 
+        }
+
+        .cartPop {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            transition: bottom .8s linear;
+        }
+        .cartPop button {
+            background-image: url(./img/cart.png);
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: inherit;
+        }
+
+        .cart-area {
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+        .cartBox {     
+            position: absolute;
+            width: 80%;
+            height: 70vh;
+            left: 50%;
+            bottom: -720px;
+            transform: translate(-50%, 0);
+            transition: bottom .8s linear, opacity .8s linear;
+            background-color: honeydew;
+            border: 1px solid black;
+            box-sizing: border-box;
+            padding: 30px;
+            display: none;
+            opacity: 1;
+            overflow: auto;
+        }
+        .cartBox ul li {
+            position: relative;
+            background-color: honeydew;
+            opacity: 1;
+            transition: opacity .5s;
+            box-shadow: rgba(6, 24, 44, 0.4) 0px 0px 0px 2px, rgba(6, 24, 44, 0.65) 0px 4px 6px -1px, rgba(255, 255, 255, 0.08) 0px 1px 0px inset;
+            display: flex;
+            margin-bottom: 20px;
+        }
+        .cartBox ul li .pname {
+            font-size: 16px;
+            margin-left: 20px;
+            line-height: 60px;
+        }
+        .cartBox ul li .price {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
+            font-size: 18px;
+            color: red;
+            font-weight: bold;
+        }
+        .cartBox ul li .price::after {
+            content: ' 원';
+        }
+        .cartBox .total .totalPrice {
+            position: absolute;
+            right: 10px;
+            bottom: 50px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .cartBox .total .totalPrice::before {
+            content: '합계 : ';
+        }
+        .cartBox .total .totalPrice::after {
+            content: ' 원';
+        }
+        .cartBox .buyBtn {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            font-size: 20px;
+        }
+        .cartBox .btn-area {
+            position: absolute;
+            right: 15px;
+            bottom: 30px;
+            font-size: 18px;
+        }
+        .cartBox .btn-area button {
+            width: 16px;
+            height: 16px;
+            border: none
+        }
+        .cartBox .btn-area span {
+            margin: 0 10px;
+        }
+        .cartBox .deleteBtn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            border: none;
+        }
+        @media (min-width: 1200px) {
+            body {
+                overflow-x: hidden;
+            }
+        }
+    </style>
+</head>
+<body onselectstart='return false'>
+
+    <div id="wrap">
+        <div class="search-area">
+            <input type="text" name="search" id="search" placeholder="Search">
+            <button>검색</button>
+        </div>
+
+        <div class="list">
+            <div class="visual">
+                <div class="card">
+                    <img src="./img/1.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">메탈쉐이크 스테인리스 304, 쿨스틸, 900ml</div>
+                        <div class="price">22410</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/2.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">락앤락 원터치 클립 텀블러, LPIK, 550ml</div>
+                        <div class="price">19350</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/3.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">코멧 진공 스테인리스 텀블러 + 손잡이 + 빨대뚜껑 + 빨대 + 빨대솔, 실버, 900ml</div>
+                        <div class="price">11990</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/4.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">텀스 뉴메가 텀블러 + 손잡이 + 빨대 방수 뚜껑 + 스텐빨대, 블랙, 900ml</div>
+                        <div class="price">14140</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/5.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">써모스 진공단열 휴대용 텀블러 JOE-480K, 샤이닝블랙(BK), 480ml</div>
+                        <div class="price">13000</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/6.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">[쿠팡수입] 스탠리 어드벤쳐 퀜처 텀블러, 화이트, 591ml</div>
+                        <div class="price">18620</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/7.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">필모아 텀블러 스텐 솔리드, 실버, 900ml</div>
+                        <div class="price">39000</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/8.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">아르크 대용량 데브 스텐 진공 텀블러 콜드컵 뚜껑 + 스테인리스빨대 + 세척솔 포함, 민트, 750ml</div>
+                        <div class="price">43290</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/9.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">레티 어반 보온보냉 텀블러 700ml + 빨대 + 세척솔 세트, 아이보리(텀블러)</div>
+                        <div class="price">24450</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src="./img/10.jpg" class="card-img-top" alt="spadeA">
+                    <div class="card-body">
+                        <div class="pname">디지지 헤리티지 스테인레스 냉온 텀블러, 메탈실버, 600ml</div>
+                        <div class="price">19050</div>
+                        <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        
+
+        <div class="cart-area">
+
+            <div class="cartPop">
+                <button></button>
+            </div>
+            
+            <div class="cartBox">
+                <div class="total">
+                    <div class="totalPrice">0</div>
+                </div>
+                <button class="buyBtn">구매하기</button>
+            </div>
+            
+        </div>
+
+    </div>
+    
+    
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script> -->
+    <script>
+        var wrapEl = document.querySelector('#wrap');
+        var productList = document.querySelectorAll('.list .card');
+        var cartBox = document.querySelector('.cartBox');
+        var listEl = document.querySelector('.list');
+
+        var cartArea = document.querySelector('.cart-area');
+        var openCart = document.querySelector('.cartPop button')
+
+        var cNum = document.querySelector('.count')
+
+        var ulTag = document.createElement('ul')   // ul 태그 생성
+
+        var totalPrice = document.querySelector('.totalPrice')
+        var buyBtn = document.querySelector('.buyBtn')
+
+        var allPrices = document.querySelectorAll('.list .card .card-body .price')
+
+
+        // 장바구니 오픈 버튼 클릭 이벤트
+        var upNdown = 0;
+        openCart.addEventListener('click', function(e) {
+            cartBox.style.zIndex = 10
+            if (upNdown == 0) {
+                cartBox.style.display = 'block';
+                setTimeout(() => {
+                    cartBox.style.bottom = '0';
+                    openCart.parentElement.style.bottom = '70vh'
+                    wrapEl.style.overflow = 'hidden';
+                }, 100);
+                upNdown = 1;
+            } else {
+                setTimeout(() => {
+                    cartBox.style.bottom = '-720px';
+                    openCart.parentElement.style.bottom = '10px'
+                }, 500);
+                setTimeout(() => {
+                    cartBox.style.display = 'none';
+                    wrapEl.style.overflow = 'visible';
+                }, 1000);
+                upNdown = 0;
+            }
+            
+        })
+
+        // document.onclick = function(e) {
+
+        //     if (upNdown == 1) {
+        //         if (e.target != cartBox && e.target != openCart) {
+        //             console.log(e.target)
+        //             setTimeout(() => {
+        //                 cartBox.style.bottom = '-720px';
+        //                 openCart.parentElement.style.bottom = '10px'
+        //             }, 500);
+        //             setTimeout(() => {
+        //                 cartBox.style.display = 'none';
+        //                 wrapEl.style.overflow = 'visible';
+        //             }, 1000);
+        //             upNdown = 0;
+        //         }
+        //     }
+            
+        // }
+
+        var listTop = 0;
+        var listLeft = 0;
+        for(var i=1; i<=productList.length; i++) {
+
+            // 각 상품 별로 위치 잡기
+            if ( i % 5 == 0) {
+                productList[i-1].style.top = listTop + 'px'
+                productList[i-1].style.left = listLeft + 'px'
+                listTop += 450
+                listLeft = 0
+            } else {
+                productList[i-1].style.top = listTop + 'px'
+                productList[i-1].style.left = listLeft + 'px'
+                listLeft += 270
+            }
+
+            allPrices[i-1].textContent = parseInt(allPrices[i-1].textContent).toLocaleString('ko-KR')   // 숫자 3자리 마다 콤마 찍기
+            moveToCart(productList[i-1]);
+        }
+
+
+        var existProduct = []
+        // 상품 클릭 메서드 및 함수
+        function moveToCart(product) {
+            
+
+            product.onmousedown = function(event) {
+                 
+                var target = event.target;
+                var mouseX = event.clientX;
+                var mouseY = event.clientY;
+
+                // 클릭한 상품 노드와 자식들까지 복제
+                var copyTarget = target.cloneNode(true);
+                copyTarget.style = 'none';  // 스타일 제거
+
+                // 클릭한 상품을 맨 위로 올리기
+                target.style.zIndex = 999;
+
+                
+                listEl.children[0].style.zIndex = 10
+                cartBox.style.zIndex = 9
+
+                var gapX = mouseX - target.offsetLeft;
+                var gapY = mouseY - target.offsetTop;
+
+                // 클릭 시 상품의 원래 위치
+                var startTop = target.offsetTop;
+                var startLeft = target.offsetLeft;
+
+                document.onmousemove = function(event) {
+                    target.style.left = event.clientX - gapX + 'px';
+                    target.style.top = event.clientY - gapY +'px';
+                    
+                    //listEl.classList.add('blur');
+                    
+
+                    // 상품 클릭시 애니메이션 클래스 추가
+                    target.classList.add('shaking');
+
+                    for (var i = 0; i < productList.length; i++) {
+                        productList[i].style.display = 'none'
+                    }
+                    
+                    target.style.display = 'block';
+
+                    // 상품 클릭시 장바구니를 애니메이션으로 올라오게
+                    cartBox.style.display = 'block';
+                    setTimeout(() => {
+                        cartBox.style.bottom = '0';
+                        openCart.parentElement.style.bottom = '70vh'
+                        // cartBox.style.opacity = '.8';
+                        wrapEl.style.overflow = 'hidden';
+                    }, 100);
+                }
+
+                document.onmouseup = function(event) {
+                    // 상품 클릭 해제 시 애니메이션 클래스 제거
+                    target.classList.remove('shaking');
+
+                    // 클릭 해제 된 상품을 밑으로 내리기
+                    target.style.zIndex = 10;
+                    
+                    // 장바구니 추가 성공 여부에 관계 없이 원위치
+                    target.style.top = startTop + 'px';
+                    target.style.left = startLeft + 'px';
+
+                    listEl.children[0].style.zIndex = 9
+                    cartBox.style.zIndex = 10
+
+
+                    // 상품 드래그 후 드롭 시 일정 범위 안에 들어오면 장바구니에 추가
+                    if ((cartBox.offsetLeft - (event.clientX - gapX))**2 + (cartBox.offsetTop - (event.clientY - gapY))**2 > 1200000) {
+                        // console.log(copyTarget.children[1].children[0].textContent)
+                        
+                        // if (copyTarget.children[1].children[0].textContent == existPro) {
+                        //     console.log('sss')
+                        // }
+                        // if (copyTarget)
+
+                        // 상품 개수 버튼 ------------------------------------------------
+                        var btnArea = document.createElement('div')
+                        btnArea.className = 'btn-area';
+                        var addBtn = document.createElement('button')
+                        addBtn.className = 'add';
+                        addBtn.textContent = '+'
+                        var countNum = document.createElement('span')
+                        countNum.className = 'count';
+                        countNum.textContent = 1
+                        var subBtn = document.createElement('button')
+                        subBtn.className = 'sub';
+                        subBtn.textContent = '-'
+
+                        btnArea.appendChild(subBtn)
+                        btnArea.appendChild(countNum)
+                        btnArea.appendChild(addBtn)
+                        // --------------------------------------------------------------
+
+                        // 상품 제거 버튼 ------------------------------------------------
+                        var deleteBtn = document.createElement("button")
+                        deleteBtn.className = 'deleteBtn';
+                        deleteBtn.textContent = 'X'
+                        // --------------------------------------------------------------
+
+
+                        // 복제한 target 엘리먼트의 이미지와 설명 부분을 추출해 li 태그에 append
+                        var liTag = document.createElement('li')   // li 태그 생성
+                        var divNameTag = document.createElement('div')
+                        divNameTag.className = 'pname'
+                        var divPriceTag = document.createElement('div')
+                        divPriceTag.className = 'price'
+
+                        var copyImg = copyTarget.children[0]
+                        copyImg.className = ''
+                        copyImg.style.width = '100px'
+                        copyImg.style.height = '100px'
+                        var copyDes = copyTarget.children[1]
+
+                        var copyPname = copyDes.children[0].textContent
+                        var copyPrice = copyDes.children[1].textContent
+
+                        liTag.appendChild(copyImg)
+                        divNameTag.textContent = copyPname
+                        divPriceTag.textContent = copyPrice
+                        liTag.appendChild(divNameTag)
+                        liTag.appendChild(divPriceTag)
+
+                        var changeCopy = liTag
+
+                        // 장바구니 요소 추가 --------------------------------------------
+                        changeCopy.appendChild(btnArea)                         // 클릭한 요소에 수량 증감 버튼 요소 추가
+                        changeCopy.appendChild(deleteBtn)                        // 상품 제거 버튼 추가
+                        cartBox.appendChild(ulTag).appendChild(changeCopy)                         // 최종적으로 ul태그와 클릭한 상품 추가
+                        // --------------------------------------------------------------
+
+                        // 장바구니 상품 금액 합계 ----------------------------------------
+                        totalPrice.textContent = totalPrice.textContent.replace(',', '')
+                        copyPrice = copyPrice.replace(',', '')
+                        totalPrice.textContent = parseInt(totalPrice.textContent) + parseInt(copyPrice)
+                        totalPrice.textContent = parseInt(totalPrice.textContent).toLocaleString('ko-KR')
+                        // --------------------------------------------------------------
+
+                        var cartPrice = document.querySelector('.cartBox ul li .price') // 장바구니에 담긴 상품 별 금액
+                        
+                        
+                        // 장바구니 상품 수량 1씩 증가
+                        addBtn.onclick = function(e) {
+                            countNum.textContent = parseInt(countNum.textContent) + 1   // 수량 1증가
+                            var addTarget = e.target.previousElementSibling
+                            copyPrice = copyPrice.replace(',', '')  // 콤마를 제거한 숫자를 변수에 저장
+
+                            var cartPrice = e.target.parentElement.previousElementSibling
+                            cartPrice.textContent = cartPrice.textContent.replace(',', '')
+
+                            cartPrice.textContent = parseInt(countNum.textContent) * parseInt(copyPrice)    // 수량 * 금액
+
+                            // 수량 증가할 때 마다 합계도 증가 ----------------------------------------------
+                            totalPrice.textContent = totalPrice.textContent.replace(',', '')
+                            totalPrice.textContent = parseInt(totalPrice.textContent) + parseInt(copyPrice)
+                            totalPrice.textContent = parseInt(totalPrice.textContent).toLocaleString('ko-KR')
+                            // ----------------------------------------------------------------------------
+
+                            cartPrice.textContent = parseInt(cartPrice.textContent).toLocaleString('ko-KR')
+                        }
+                        // 장바구니 상품 수량 1씩 감소
+                        subBtn.onclick = function(e) {
+                            if (countNum.textContent > 1) {
+                                countNum.textContent = parseInt(countNum.textContent) - 1
+                                var addTarget = e.target.previousElementSibling
+                                copyPrice = copyPrice.replace(',', '')  // 콤마를 제거한 숫자를 변수에 저장
+
+                                var cartPrice = e.target.parentElement.previousElementSibling
+                                cartPrice.textContent = cartPrice.textContent.replace(',', '')
+                                cartPrice.textContent = parseInt(cartPrice.textContent) - parseInt(copyPrice)    // 금액 - 1개 금액
+
+                                totalPrice.textContent = totalPrice.textContent.replace(',', '')
+                                totalPrice.textContent = parseInt(totalPrice.textContent) - parseInt(copyPrice)
+                                totalPrice.textContent = parseInt(totalPrice.textContent).toLocaleString('ko-KR')
+
+                                cartPrice.textContent = parseInt(cartPrice.textContent).toLocaleString('ko-KR')                                
+                            } else {
+                                countNum.textContent = 1
+                            }
+                        }
+
+                        // 장바구니 상품 제거
+                        deleteBtn.onclick = function(e) {
+
+                            if (e.target.parentElement.style.opacity >= 0) {
+                                e.target.parentElement.style.opacity--
+
+                                copyPrice = copyPrice.replace(',', '')
+
+                                totalPrice.textContent = totalPrice.textContent.replace(',', '')
+                                totalPrice.textContent = parseInt(totalPrice.textContent) - ( parseInt(countNum.textContent) * parseInt(copyPrice) )
+                                totalPrice.textContent = parseInt(totalPrice.textContent).toLocaleString('ko-KR')
+
+                                setTimeout(function() {
+                                    e.target.parentElement.remove()
+                                }, 500)
+                            }
+                            
+                        };
+
+                        // 상품 클릭 해제 시 장바구니를 애니메이션으로 내려가게
+                        setTimeout(() => {
+                            cartBox.style.bottom = '-720px';
+                            openCart.parentElement.style.bottom = '10px'
+                        }, 500);
+                        setTimeout(() => {
+                            for (var i = 0; i < productList.length; i++) {
+                                productList[i].style.display = 'block'
+                            }
+                            target.style.display = 'block';
+
+                            cartBox.style.display = 'none';
+                            wrapEl.style.overflow = 'visible';
+                        }, 1000);
+                    } else {
+                        cartBox.style.bottom = '-720px';
+                        openCart.parentElement.style = 'transition: none'
+                        openCart.parentElement.style.bottom = '10px'
+                        cartBox.style.display = 'none';
+                        wrapEl.style.overflow = 'visible';
+
+                        for (var i = 0; i < productList.length; i++) {
+                            productList[i].style.display = 'block'
+                        }
+                        
+                        target.style.display = 'block';
+                        
+                    }
+                    // console.log((cartBox.offsetLeft - (event.clientX - gapX))**2 + (cartBox.offsetTop - (event.clientY - gapY))**2)
+
+                    openCart.parentElement.style = 'transition: bottom .8s linear'
+                    
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                }
+            }
+        }
+        
+    </script>
+</body>
+</html>
